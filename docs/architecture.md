@@ -220,7 +220,7 @@ tool-specific has leaked into shared material, and the leak is fixed before the 
 ### 3.4 The Catalogue
 
 Tools describe themselves through declared metadata — what the tool is called, what problem it
-solves, which phase category it belongs to, what it needs from the environment, and which limits
+solves, which category it belongs to, what it needs from the environment, and which limits
 apply to it. Discovery, navigation, and presentation of the collection are derived from these
 declarations.
 
@@ -393,7 +393,8 @@ slowly and eventually stabilise. Shared material that grows in proportion to the
 absorbing tool-specific concerns and is being misused.
 
 **Discovery scales through structure.** Navigation and search derive from declared metadata.
-Categories map to the five locked phases and that taxonomy is closed.
+Categories are declared in metadata, centrally owned, and change only by deliberate decision — not as
+a side effect of adding a tool.
 
 **Comprehension in isolation.** Any tool can be fully understood without reading any other tool.
 This is what keeps the codebase understandable at any size, and it is the reason the isolation rule

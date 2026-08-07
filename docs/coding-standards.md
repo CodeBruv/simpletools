@@ -396,7 +396,7 @@ it, in any module, for any reason.
 
 ### 5.3 Design Tokens
 
-- Colour, spacing, typography, radius, and elevation come from the tokens defined by
+- Colour, spacing, typography, radius, and elevation come from the token system defined by
   `design-system.md`.
 - One-off values that bypass the token system are a defect by default. Where one is genuinely
   necessary, it carries a comment explaining why the token set was insufficient — and that is usually

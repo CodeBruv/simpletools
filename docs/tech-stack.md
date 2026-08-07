@@ -187,7 +187,7 @@ remains verifiable on its own. No tool's core logic may require React to run.
 ### 3.2 Styling And Components
 
 **Tailwind CSS**
-*Responsibility.* All styling. The design tokens defined by `design-system.md` are expressed through
+*Responsibility.* All styling. The token system defined by `design-system.md` is expressed through
 its configuration.
 *Boundary.* It is the only styling mechanism. No parallel styling approach is introduced alongside
 it, because two styling systems means every contributor must learn both and choose between them
