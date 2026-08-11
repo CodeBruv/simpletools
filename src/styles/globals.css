@@ -1,0 +1,315 @@
+@import 'tailwindcss';
+
+/*
+  SimpleTools design tokens.
+
+  Direction: "warm utilitarian". Warm paper stock, near-black ink, and one
+  cool accent (deep workshop teal) so the accent reads as an instrument
+  marking rather than decoration. Every *measurement* the product reports —
+  file sizes, percentages, pixel dimensions — is set in mono, because
+  SimpleTools is fundamentally a set of instruments that measure things.
+*/
+@theme {
+  --color-paper: #fbf9f5;
+  --color-surface: #ffffff;
+  /* The well an input sits in: a shade below the card it lives on, so a field
+     reads as somewhere to type rather than as more card. */
+  --color-canvas: #f7f4ee;
+  --color-ink: #16150f;
+  --color-muted: #6a6558;
+  --color-faint: #938d7e;
+  /* Placeholder text and inactive glyphs. Quieter than muted, deliberately not
+     used for anything a user must be able to read. */
+  --color-subtle: #8a8474;
+  --color-line: #e4dfd3;
+  --color-line-strong: #cfc8b6;
+
+  --color-accent: #0e5b5f;
+  --color-accent-hover: #0a4548;
+  --color-accent-soft: #e3eeed;
+  /* Foreground for anything sitting on an accent fill. A token rather than a
+     literal white, because the accent inverts in dark mode. */
+  --color-on-accent: #fbf9f5;
+
+  --color-danger: #a3341f;
+  --color-danger-soft: #fbeae6;
+
+  /* The darker square of the transparency checkerboard behind image previews. */
+  --color-checker: #f2efe8;
+
+  /*
+    Document tokens, for generated paper: invoices and anything else the user
+    will print or send on.
+
+    These are deliberately *absent* from the .dark block below, which is the
+    whole point of them. An invoice is a document that leaves the application
+    and gets printed, emailed and filed — it must look the same whichever theme
+    the sender happened to be using, and printing a black rectangle wastes a
+    cartridge. So the surrounding app inverts and the document does not.
+  */
+  --color-doc: #ffffff;
+  --color-doc-ink: #14130e;
+  --color-doc-muted: #55514a;
+  --color-doc-faint: #6e6960;
+  --color-doc-line: #ddd8cc;
+  --color-doc-line-strong: #b8b1a0;
+  --color-doc-accent: #0e5b5f;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+/*
+  Dark mode.
+
+  Re-declaring the same token names means every existing component inverts
+  without gaining a single `dark:` variant.
+
+  This is dark paper, not a dark dashboard. The ground is a warm charcoal that
+  still carries the yellow-brown cast of the light theme's paper, and cards sit
+  *above* it on a lighter charcoal so the same elevation story reads in both
+  themes: light = warm paper with white cards, dark = warm charcoal with lighter
+  charcoal cards. Pure black was rejected deliberately — it loses that warmth
+  and makes light text halate.
+
+  Ratios are not eyeballed. `node scripts/check-contrast.mjs` computes every
+  pair below and fails the build of the palette if any of them regress, so these
+  numbers stay true:
+    ink/paper 14.4:1      ink/surface 12.8:1
+    muted/paper 7.7:1     muted/surface 6.9:1
+    accent/paper 7.5:1    accent/surface 6.7:1
+    on-accent/accent 7.9:1
+    danger/paper 7.0:1    danger/surface 6.2:1
+    faint/paper 4.5:1     (large text and non-text only)
+  The same script asserts the ground stays above 0.012 relative luminance, which
+  is the line between charcoal and black.
+*/
+.dark {
+  --color-paper: #22201b;
+  --color-surface: #2c2924;
+  /* Darker than the card, inverting the light theme's relationship: an input
+     well recedes on both themes rather than lifting on one. */
+  --color-canvas: #262420;
+  --color-ink: #f4f1e9;
+  --color-muted: #b8b2a4;
+  --color-faint: #8c8677;
+  --color-subtle: #9c9686;
+  --color-line: #3a362f;
+  --color-line-strong: #4a463e;
+
+  --color-accent: #5cc0bc;
+  --color-accent-hover: #7ad0cc;
+  --color-accent-soft: #1f3b39;
+  --color-on-accent: #08201f;
+
+  --color-danger: #f0907a;
+  --color-danger-soft: #3a231d;
+
+  --color-checker: #37332c;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Visible keyboard focus everywhere, without ringing on mouse clicks. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /*
+    The eyebrow: a small mono label used for categories and section markers.
+    Structural, not decorative — it always names a real taxonomy the user
+    can navigate to.
+  */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+
+  /*
+    Transparency checkerboard behind image previews, so a transparent PNG reads
+    as transparent rather than as a solid background. Written as a component
+    class rather than an arbitrary Tailwind value because both squares are
+    tokens that change with the theme, and a plain rule is easier to trust than
+    a long bracketed gradient.
+  */
+  .checkerboard {
+    background-image: repeating-conic-gradient(
+      var(--color-checker) 0% 25%,
+      var(--color-surface) 0% 50%
+    );
+    background-size: 16px 16px;
+  }
+
+  /*
+    Reserved space for a future advertisement.
+
+    No advertising provider is configured, so AdSlot renders nothing at all and
+    this rule never applies in the current build. It exists so that switching
+    advertising on is a flag change rather than a layout project: the height is
+    reserved from the placement table *before* a unit loads, which is what stops
+    a late-arriving ad from shoving a download button out from under a thumb.
+  */
+  .ad-slot {
+    display: block;
+    min-height: var(--ad-height-narrow);
+  }
+
+  @media (min-width: 48rem) {
+    .ad-slot {
+      min-height: var(--ad-height-wide);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+  Printing.
+
+  A tool that produces a document has to be able to put that document on paper
+  without the application coming with it. Every rule below is scoped to
+  `body:has(.print-document)`, so pages that generate no document — the homepage,
+  a category listing, the image compressor — still print exactly as they always
+  did. Only a page that declares a printable region gets the treatment.
+
+  Hiding works by declared intent: a region marked `data-print="hide"` is
+  application rather than document, which is how a tool opts its editor and
+  buttons out, and how the shared layout opts out its own chrome.
+
+  It deliberately does *not* work by element type. `header`, `footer` and `nav`
+  describe document structure long before they describe page furniture, and a
+  generated document is entitled to use them — an invoice's letterhead is a
+  `<header>` and its payment terms are a `<footer>`. Hiding those by tag name
+  once printed invoices with no business name, no invoice number and no terms,
+  while the screen still looked perfect. The landmark rule below is kept only as
+  a net for an unmarked landmark added later, and it excludes the document.
+*/
+@page {
+  margin: 14mm;
+}
+
+@media print {
+  body:has(.print-document) {
+    background: #fff;
+  }
+
+  body:has(.print-document) [data-print='hide'],
+  body:has(.print-document) .ad-slot {
+    display: none !important;
+  }
+
+  /*
+    The net. Every landmark in the layout is already marked above, so this rule
+    should never be the thing that hides anything — it exists so that a `<nav>`
+    or `<footer>` added to the shared layout later cannot reach a customer's
+    invoice just because someone forgot the attribute.
+
+    The exclusion is the whole point: without it this matches the document's own
+    letterhead and terms. It is a separate rule rather than another line in the
+    list above so that the simple attribute rule keeps working even in a browser
+    that rejects this selector.
+  */
+  body:has(.print-document) header:not(.print-document, .print-document *),
+  body:has(.print-document) footer:not(.print-document, .print-document *),
+  body:has(.print-document) nav:not(.print-document, .print-document *) {
+    display: none !important;
+  }
+
+  /*
+    The document stops being a card in a column and becomes the page. Its own
+    border and rounding are dropped because a printed sheet already has edges,
+    and `print-color-adjust: exact` keeps the paper white and the rules visible
+    instead of letting the browser's ink-saving pass drop them.
+  */
+  body:has(.print-document) .print-document {
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /*
+    Every ancestor of the document is flattened for print.
+
+    The preview sits in a `lg:sticky` column, and a sticky or scrolling ancestor
+    pins the document to the first sheet and clips whatever follows. Tailwind's
+    `print:static` is on that column too, but which of `lg:` and `print:` wins
+    depends on the order the variants happen to be emitted in — so the intent is
+    restated here, with the weight to settle it either way.
+  */
+  body:has(.print-document) *:has(.print-document) {
+    position: static !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* A row split across two sheets is the classic way a total gets orphaned. */
+  body:has(.print-document) .print-document tr,
+  body:has(.print-document) .print-document li,
+  body:has(.print-document) .print-document .print-keep-together {
+    break-inside: avoid;
+  }
+
+  /*
+    Anything that clips on screen must not clip across a page break, and a
+    sticky preview column would otherwise pin the document to the first sheet.
+  */
+  body:has(.print-document) .print-document,
+  body:has(.print-document) .print-document * {
+    overflow: visible !important;
+  }
+}
+

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Image Compressor — browser verification</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #fbf9f5;
+        --surface: #fff;
+        --ink: #16150f;
+        --muted: #6a6558;
+        --line: #e4dfd3;
+        --accent: #0e5b5f;
+        --pass: #1d6b3f;
+        --fail: #a3341f;
+        --mono: ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 2.5rem 1.25rem 5rem;
+        background: var(--paper);
+        color: var(--ink);
+        font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      main { max-width: 60rem; margin: 0 auto; }
+      .eyebrow {
+        font: 600 11px/1 var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      h1 { font-size: 1.6rem; margin: 0.6rem 0 0.4rem; letter-spacing: -0.02em; }
+      p.lede { color: var(--muted); margin: 0 0 1.75rem; max-width: 46rem; }
+      #summary {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        margin-bottom: 1.75rem;
+        font: 600 1.05rem/1.4 var(--mono);
+      }
+      #summary.pass { border-color: rgba(29, 107, 63, 0.4); color: var(--pass); }
+      #summary.fail { border-color: rgba(163, 52, 31, 0.4); color: var(--fail); }
+      h2 {
+        font: 600 11px/1 var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 2rem 0 0.6rem;
+      }
+      ul { list-style: none; margin: 0; padding: 0; }
+      li {
+        display: grid;
+        grid-template-columns: 1.75rem 1fr;
+        gap: 0.35rem 0.6rem;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+        margin-bottom: 0.45rem;
+      }
+      .mark { font: 600 1rem/1.4 var(--mono); }
+      li.pass .mark { color: var(--pass); }
+      li.fail .mark { color: var(--fail); }
+      li.skip .mark, li.run .mark { color: var(--muted); }
+      .name { font-weight: 500; }
+      .detail {
+        grid-column: 2;
+        font: 13px/1.5 var(--mono);
+        color: var(--muted);
+        word-break: break-word;
+      }
+      li.fail .detail { color: var(--fail); }
+      footer {
+        margin-top: 2.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+      code { font: 13px var(--mono); background: #efece4; padding: 0.1em 0.35em; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="eyebrow">SimpleTools · verification</span>
+      <h1>Image Compressor, checked in a real browser</h1>
+      <p class="lede">
+        This page runs the actual compressor source from <code>src/</code> against real image data
+        using this browser's own canvas encoder. It is a development tool and is not part of the
+        site. Nothing here contacts the network — that is one of the things it checks.
+      </p>
+
+      <div id="summary">Running…</div>
+      <div id="results"></div>
+
+      <footer>
+        Regenerate with <code>npm run verify:build</code>. The compressor code in this file is
+        emitted from the real TypeScript source, so it cannot drift from what ships.
+      </footer>
+    </main>
+
+    <script type="module">
+      /*__SOURCE__*/
+
+      /*__FIXTURES__*/
+
+      /*__CHECKS__*/
+
+      /* ---------- runner ---------- */
+
+      const results = document.getElementById('results')
+      const summary = document.getElementById('summary')
+      const groups = new Map()
+
+      for (const entry of CHECKS) {
+        if (!groups.has(entry.group)) {
+          const heading = document.createElement('h2')
+          heading.textContent = entry.group
+          const list = document.createElement('ul')
+          results.append(heading, list)
+          groups.set(entry.group, list)
+        }
+
+        const item = document.createElement('li')
+        item.className = 'run'
+        item.innerHTML =
+          '<span class="mark">…</span><span class="name"></span><span class="detail"></span>'
+        item.querySelector('.name').textContent = entry.name
+        groups.get(entry.group).append(item)
+        entry.node = item
+      }
+
+      let passed = 0
+      let failed = 0
+      let skipped = 0
+
+      for (const entry of CHECKS) {
+        // Yield so each row paints as it resolves.
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+
+        try {
+          const detail = await entry.fn()
+          const wasSkipped = typeof detail === 'string' && detail.startsWith('skipped')
+          entry.node.className = wasSkipped ? 'skip' : 'pass'
+          entry.node.querySelector('.mark').textContent = wasSkipped ? '–' : '✓'
+          entry.node.querySelector('.detail').textContent = detail ?? ''
+          if (wasSkipped) skipped += 1
+          else passed += 1
+        } catch (error) {
+          entry.node.className = 'fail'
+          entry.node.querySelector('.mark').textContent = '✗'
+          entry.node.querySelector('.detail').textContent = String(error?.message ?? error)
+          failed += 1
+        }
+      }
+
+      summary.className = failed === 0 ? 'pass' : 'fail'
+      summary.textContent =
+        failed === 0
+          ? `All ${passed} checks passed${skipped ? ` (${skipped} skipped)` : ''} — ${navigator.userAgent.includes('Firefox') ? 'Firefox' : navigator.userAgent.includes('Chrome') ? 'Chrome' : 'this browser'}`
+          : `${failed} failed, ${passed} passed${skipped ? `, ${skipped} skipped` : ''}`
+    </script>
+  </body>
+</html>

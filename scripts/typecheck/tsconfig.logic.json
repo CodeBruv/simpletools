@@ -1,0 +1,34 @@
+{
+  "//": "Strict type-check of the framework-independent logic core. See stubs.d.ts for why this exists. Superseded by `npm run typecheck` once node_modules is installable.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "paths": {
+      "@/*": ["../../src/*"]
+    },
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "files": [
+    "stubs.d.ts",
+    "../../src/lib/file.ts",
+    "../../src/lib/download.ts",
+    "../../src/lib/utils.ts",
+    "../../src/lib/seo.ts",
+    "../../src/data/categories.ts",
+    "../../src/tools/registry.ts",
+    "../../src/tools/image-compressor/types.ts",
+    "../../src/tools/image-compressor/compressImage.ts"
+  ]
+}
