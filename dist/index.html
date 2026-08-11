@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#FBF9F5" />
+
+    <title>SimpleTools — Free tools for everyday tasks</title>
+    <meta
+      name="description"
+      content="A growing collection of fast, free browser tools. Compress images, generate QR codes, build invoices — no account, no uploads, no waiting."
+    />
+    <link rel="canonical" href="https://simpletools.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SimpleTools" />
+    <meta property="og:title" content="SimpleTools — Free tools for everyday tasks" />
+    <meta
+      property="og:description"
+      content="A growing collection of fast, free browser tools. No account, no uploads, no waiting."
+    />
+    <meta property="og:image" content="https://simpletools.app/og-default.png" />
+    <meta property="og:url" content="https://simpletools.app/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!--
+      Applies the saved appearance before the first paint, so a dark-mode user
+      never sees a flash of light paper. ThemeProvider takes over once React
+      mounts; both read the same 'simpletools-theme' key by the same rules.
+      Kept inline and tiny on purpose — an external file would be fetched after
+      the first paint, which defeats the point.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('simpletools-theme')
+          var preference = saved === 'light' || saved === 'dark' ? saved : 'system'
+          var dark =
+            preference === 'dark' ||
+            (preference === 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+          document.documentElement.classList.toggle('dark', dark)
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+
+          var meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) meta.setAttribute('content', dark ? '#22201B' : '#FBF9F5')
+        } catch (error) {
+          /* Storage blocked or unavailable: fall through to the light default. */
+        }
+      })()
+    </script>
+    <script type="module" crossorigin src="/assets/index-tKOoBib7.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C-_Mfu1Y.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
