@@ -114,18 +114,19 @@ export const TOOLS: readonly Tool[] = [
   {
     slug: 'profit-margin-calculator',
     name: 'Profit Margin Calculator',
-    description: 'Work out margin, markup and profit from cost and price.',
+    description: 'Work out profit, margin and markup, or the price you should charge.',
     category: 'finance',
     icon: Percent,
-    status: 'planned',
+    status: 'available',
     featured: true,
     clientOnly: true,
-    keywords: ['profit', 'margin', 'markup', 'cost', 'price', 'revenue', 'calculator'],
+    keywords: ['profit', 'margin', 'markup', 'cost', 'price', 'selling', 'revenue', 'calculator'],
     seo: {
       title: 'Profit Margin Calculator — Margin & Markup | SimpleTools',
       description:
-        'Calculate profit margin, markup and gross profit from your cost and selling price. Free and instant. Coming soon to SimpleTools.',
+        'Calculate profit, margin and markup from your cost and selling price, or find the price that hits the margin you want. Free, instant, in your browser.',
     },
+    component: lazy(() => import('@/tools/profit-margin/ProfitMargin')),
   },
   {
     slug: 'invoice-generator',

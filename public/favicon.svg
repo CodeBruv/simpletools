@@ -1,11 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0E5B5F" />
-  <path
-    d="M9 22.5V9.5M9 9.5h5.2a3.4 3.4 0 0 1 0 6.8H9M20 9.5v13M17 22.5h6"
-    fill="none"
-    stroke="#FBF9F5"
-    stroke-width="2.6"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="#0E5B5F" stroke-linecap="round" stroke-linejoin="round">
+<style>@media(prefers-color-scheme:dark){rect,path{stroke:#5CC0BC}circle{fill:#5CC0BC}}</style>
+<rect x="1.1" y="1.1" width="29.8" height="29.8" rx="2.6" stroke-width="2.2"/>
+<path d="M23.4 6H12.6A5 5 0 0 0 12.6 16H19.4A5 5 0 0 1 19.4 26H8.6" stroke-width="2.2"/>
+<path d="M15.9 6v1.9M13.9 6v1.9M11.71 6.08L12.05 7.95M9.41 7.15L10.62 8.61M7.93 9.21L9.7 9.89M7.65 11.73L9.53 11.45M8.65 14.07L10.15 12.9M10.66 15.61L11.4 13.86M13.05 16v-1.9M15.05 16v-1.9M16.1 26v-1.9M18.1 26v-1.9M20.29 25.92L19.95 24.05M22.59 24.85L21.38 23.39M24.07 22.79L22.3 22.11M24.35 20.27L22.47 20.55M23.35 17.93L21.85 19.1M21.34 16.39L20.6 18.14M18.95 16v1.9M16.95 16v1.9" stroke-width="1.1"/>
+<circle cx="23.4" cy="6" r="1.9" fill="#0E5B5F" stroke="none"/>
+<circle cx="8.6" cy="26" r="1.9" fill="#0E5B5F" stroke="none"/>
 </svg>

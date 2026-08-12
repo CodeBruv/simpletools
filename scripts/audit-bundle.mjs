@@ -37,6 +37,12 @@ const MUST_BE_LAZY = [
   'src/tools/invoice-generator/currencies.ts',
   'src/tools/invoice-generator/invoiceDefaults.ts',
   'src/tools/invoice-generator/validateInvoice.ts',
+  'src/tools/profit-margin/ProfitMargin.tsx',
+  'src/tools/profit-margin/MarginResults.tsx',
+  'src/tools/profit-margin/MarginField.tsx',
+  'src/tools/profit-margin/calculateMargin.ts',
+  'src/tools/profit-margin/marginInputs.ts',
+  'src/tools/profit-margin/marginSummary.ts',
 ]
 
 /** Removes dynamic import calls so only static edges are matched. */

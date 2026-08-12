@@ -115,7 +115,7 @@ describe('tool availability', () => {
     const available = TOOLS.filter((tool) => tool.status === 'available')
     assert.deepEqual(
       available.map((tool) => tool.slug),
-      ['image-compressor', 'pdf-compressor', 'qr-code-generator', 'invoice-generator'],
+      ['image-compressor', 'pdf-compressor', 'qr-code-generator', 'profit-margin-calculator', 'invoice-generator'],
     )
   })
 
