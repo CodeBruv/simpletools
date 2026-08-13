@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 const SITE_NAME = 'SimpleTools'
-const SITE_ORIGIN = 'https://simpletools.app'
+const SITE_ORIGIN = 'https://simpletools.site'
 const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
 
 export interface PageMeta {
