@@ -6,6 +6,7 @@ import ToolsIndex from '@/pages/ToolsIndex'
 import ToolPage from '@/pages/ToolPage'
 import NotFound from '@/pages/NotFound'
 
+
 const CategoriesIndex = lazy(() => import('@/pages/CategoriesIndex'))
 const CategoryPage = lazy(() => import('@/pages/CategoryPage'))
 const StaticPage = lazy(() => import('@/pages/StaticPage'))

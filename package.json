@@ -16,6 +16,7 @@
     "verify:build": "node scripts/build-verify-harness.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "lucide-react": "0.513.0",
     "pdf-lib": "1.17.1",
     "pdfjs-dist": "6.2.108",
