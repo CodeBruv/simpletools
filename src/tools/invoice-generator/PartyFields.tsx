@@ -42,7 +42,7 @@ export default function PartyFields({
         optional
         value={party.address}
         onChange={(address) => onChange({ address })}
-        placeholder={'12 Marina Road\nLagos Island, Lagos'}
+        placeholder={'12 Industrial Road\nNew York, NY 10001'}
         rows={2}
       />
 
@@ -68,7 +68,7 @@ export default function PartyFields({
           autoComplete="tel"
           value={party.phone}
           onChange={(phone) => onChange({ phone })}
-          placeholder="+234 800 000 0000"
+          placeholder="+1 813 138 2026"
         />
       </div>
 
