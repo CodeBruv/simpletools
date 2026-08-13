@@ -49,7 +49,7 @@ const FAQ: readonly FaqItem[] = [
   {
     question: 'Where is my invoice saved?',
     answer:
-      'Nowhere. It exists only in this tab while you work on it, and it is gone when you close or reload the page. Nothing is uploaded and nothing is kept, which also means there is no invoice history to come back to — save the PDF somewhere you control.',
+      'Nowhere. It exists only in this tab while you work on it, and it is gone when you close or reload the page. Nothing is uploaded and nothing is kept, which also means there is no invoice history to come back to. Save the PDF somewhere you control.',
   },
   {
     question: 'How do I get a PDF?',
@@ -59,7 +59,7 @@ const FAQ: readonly FaqItem[] = [
   {
     question: 'Does changing the currency convert the amounts?',
     answer:
-      'No. It changes the symbol and the way numbers are written, and leaves your figures exactly as you typed them. There are no exchange rates here — converting would mean fetching a live rate, and this tool makes no network requests at all.',
+      'No. It changes the symbol and the way numbers are written, and leaves your figures exactly as you typed them. There are no exchange rates here, converting would mean fetching a live rate, and this tool makes no network requests at all.',
   },
   {
     question: 'Can I put my logo on it?',
@@ -74,7 +74,7 @@ const FAQ: readonly FaqItem[] = [
   {
     question: 'The invoice number always starts at INV-0001. Why?',
     answer:
-      'Because nothing is remembered between visits, the tool cannot know what you sent last time, and inventing a higher number would imply a history it does not have. Type your own number over it — that field is yours.',
+      'Because nothing is remembered between visits, the tool cannot know what you sent last time, and inventing a higher number would imply a history it does not have. Type your own number over it, that field is yours.',
   },
 ]
 
