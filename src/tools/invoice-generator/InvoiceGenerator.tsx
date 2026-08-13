@@ -39,7 +39,7 @@ const HELP = (
     <p>
       When it looks right, use Print / Save as PDF and choose <em>Save as PDF</em> as the
       destination in the dialogue your browser opens. On a phone the same option appears under the
-      share or print menu. Only the invoice prints — the form, the site navigation and everything
+      share or print menu. Only the invoice prints, the form, the site navigation and everything
       else on this page are left out.
     </p>
   </>
