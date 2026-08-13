@@ -10,7 +10,7 @@ export const HELP = (
       <strong>Keep text selectable</strong> rebuilds the file's internal structure: objects are
       packed into compressed streams and anything left over from previous edits is dropped. Text,
       links, bookmarks and form fields survive untouched. The catch is that it can only remove
-      structural waste, so a PDF that was already well built may come back barely smaller — or
+      structural waste, so a PDF that was already well built may come back barely smaller, or
       occasionally larger. The tool tells you either way.
     </p>
     <p>
