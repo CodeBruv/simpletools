@@ -17,7 +17,7 @@ import type { MarginField, MarginInputs, MarginMode, MarginOutcome, MarginProble
  * own default stays USD, so declaring this tool's preference locally avoids
  * changing a value another tool depends on.
  */
-export const DEFAULT_MARGIN_CURRENCY = 'NGN'
+export const DEFAULT_MARGIN_CURRENCY = 'USD'
 
 export const EMPTY_MARGIN_INPUTS: MarginInputs = {
   cost: '',
