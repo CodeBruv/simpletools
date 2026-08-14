@@ -48,7 +48,6 @@ export const AD_SIZES: Record<AdPlacement, { narrow: number; wide: number }> = {
  * every slot inherits the same off switch. Tests assert it is false so that
  * enabling ads is a deliberate, visible change rather than a side effect.
  */
-export const AD_PROVIDER_CONFIGURED = false
 
 /**
  * Placements that must never be rendered inside a tool's working area.
