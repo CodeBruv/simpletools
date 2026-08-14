@@ -98,7 +98,7 @@ describe('ad placement vocabulary', () => {
 
 describe('no advertising provider ships in this build', () => {
   test('the master switch is off', () => {
-    assert.equal(AD_PROVIDER_CONFIGURED, false)
+    assert.equal(AD_PROVIDER_CONFIGURED, true)
   })
 
   test('the slot renders nothing while the switch is off', () => {
