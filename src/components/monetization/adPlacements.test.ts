@@ -10,7 +10,7 @@ import {
   AD_SIZES,
   PLACEMENTS_FORBIDDEN_INSIDE_TOOL_UI,
   isAdPlacement,
-} from '@/components/monetization/adPlacements'
+} from './adPlacements'
 
 /*
   Advertising is the one part of this codebase where the incentive to do the

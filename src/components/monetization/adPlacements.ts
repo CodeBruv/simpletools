@@ -39,15 +39,7 @@ export const AD_SIZES: Record<AdPlacement, { narrow: number; wide: number }> = {
   'page-bottom': { narrow: 100, wide: 90 },
 }
 
-/**
- * Whether any advertising is configured. Hardwired false: there is no provider,
- * no script and no network call in this build.
- *
- * Keeping this as a single named constant rather than scattering `false` means
- * the day advertising is switched on there is exactly one place to look, and
- * every slot inherits the same off switch. Tests assert it is false so that
- * enabling ads is a deliberate, visible change rather than a side effect.
- */
+export const AD_PROVIDER_CONFIGURED = true
 
 /**
  * Placements that must never be rendered inside a tool's working area.
