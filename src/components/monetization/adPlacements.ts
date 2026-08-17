@@ -28,18 +28,15 @@ export const AD_PLACEMENTS = [
 export type AdPlacement = (typeof AD_PLACEMENTS)[number]
 
 /**
- * Reserved height per placement, in pixels, matched to standard display sizes
- * so introducing a real unit later does not reflow the page. Mobile first: the
- * narrow value is a 320x100 large mobile banner, the wide one a 728x90
- * leaderboard.
+ * Reserved height for an active placement, in pixels. Mobile first: the narrow
+ * value fits a 320x100 unit and the wide value fits a 728x90 unit. An inactive
+ * placement renders no host element and therefore reserves no height.
  */
 export const AD_SIZES: Record<AdPlacement, { narrow: number; wide: number }> = {
   'tool-top': { narrow: 100, wide: 90 },
   'tool-bottom': { narrow: 100, wide: 90 },
   'page-bottom': { narrow: 100, wide: 90 },
 }
-
-export const AD_PROVIDER_CONFIGURED = true
 
 /**
  * Placements that must never be rendered inside a tool's working area.
