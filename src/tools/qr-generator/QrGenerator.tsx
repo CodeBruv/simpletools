@@ -164,9 +164,8 @@ export default function QrGenerator({ tool }: ToolComponentProps) {
   return (
     <ToolShell tool={tool} help={HELP} faq={FAQ}>
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 space-y-8">
-          <section className="rounded-xl border border-line bg-surface p-5 sm:p-6">
-            <fieldset className="min-w-0">
+        <section className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6 lg:col-start-1 lg:row-start-1">
+          <fieldset className="min-w-0">
               <legend className="eyebrow">What should it do?</legend>
 
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -207,32 +206,24 @@ export default function QrGenerator({ tool }: ToolComponentProps) {
                   )
                 })}
               </div>
-            </fieldset>
+          </fieldset>
 
-            <div className="mt-6" onBlur={() => setShowErrors(true)}>
-              <QrFieldset
-                type={type}
-                fields={fields}
-                errors={visibleErrors}
-                onChange={updateField}
-              />
-            </div>
-          </section>
-
-          <section className="rounded-xl border border-line bg-surface p-5 sm:p-6">
-            <h2 className="eyebrow">Appearance</h2>
-            <div className="mt-4">
-              <AppearanceControls appearance={appearance} onChange={updateAppearance} />
-            </div>
-          </section>
-        </div>
+          <div className="mt-6" onBlur={() => setShowErrors(true)}>
+            <QrFieldset
+              type={type}
+              fields={fields}
+              errors={visibleErrors}
+              onChange={updateField}
+            />
+          </div>
+        </section>
 
         {/*
-          The preview sticks alongside the form on a wide screen so the code
-          stays visible while the fields are edited. On mobile it falls below,
-          which keeps the reading order the same as the task order.
+          The single preview follows the payload fields in the DOM. On a wide
+          screen it moves to the sticky right column without changing the
+          sequential mobile or assistive-technology reading order.
         */}
-        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <aside className="min-w-0 lg:sticky lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:top-24 lg:self-start">
           <div className="rounded-xl border border-line bg-surface p-5 sm:p-6">
             <h2 className="eyebrow">Your code</h2>
 
@@ -317,6 +308,13 @@ export default function QrGenerator({ tool }: ToolComponentProps) {
               : (encoded?.error ?? 'Waiting for the details.')}
           </p>
         </aside>
+
+        <section className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6 lg:col-start-1 lg:row-start-2">
+          <h2 className="eyebrow">Appearance</h2>
+          <div className="mt-4">
+            <AppearanceControls appearance={appearance} onChange={updateAppearance} />
+          </div>
+        </section>
       </div>
     </ToolShell>
   )

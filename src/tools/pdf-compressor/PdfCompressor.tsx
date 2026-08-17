@@ -178,35 +178,8 @@ export default function PdfCompressor({ tool }: ToolComponentProps) {
         <PdfDropzone onFile={handleFile} error={inputError} />
       ) : (
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
-          <div className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6">
-            <p className="eyebrow">Selected file</p>
-            <p className="mt-2 truncate font-mono text-sm text-ink" title={file.name}>
-              {file.name}
-            </p>
-            <p className="mt-1 text-sm text-muted">
-              {formatBytes(file.size)}
-              {pageCount !== null && ` · ${pageCount} ${pageCount === 1 ? 'page' : 'pages'}`}
-            </p>
-
-            <div className="mt-6 border-t border-line pt-6">
-              <ModeSelector
-                mode={mode}
-                onModeChange={changeMode}
-                quality={quality}
-                onQualityChange={setQuality}
-                disabled={busy}
-              />
-            </div>
-
-            {qualityStale && (
-              <Button variant="secondary" className="mt-4 w-full" onClick={() => void run(file, mode, quality)}>
-                <RefreshCw className="size-4" aria-hidden="true" />
-                Re-compress at {Math.round(quality * 100)}%
-              </Button>
-            )}
-          </div>
-
-          <div className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6">
+          {/* Keep progress, errors, and result actions first in DOM order on phones. */}
+          <div className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6 lg:col-start-2">
             {processError ? (
               <div>
                 <h2 className="text-base font-semibold text-ink">That didn't work</h2>
@@ -251,6 +224,34 @@ export default function PdfCompressor({ tool }: ToolComponentProps) {
                   </Button>
                 </div>
               </>
+            )}
+          </div>
+
+          <div className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6 lg:col-start-1 lg:row-start-1">
+            <p className="eyebrow">Selected file</p>
+            <p className="mt-2 truncate font-mono text-sm text-ink" title={file.name}>
+              {file.name}
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              {formatBytes(file.size)}
+              {pageCount !== null && ` · ${pageCount} ${pageCount === 1 ? 'page' : 'pages'}`}
+            </p>
+
+            <div className="mt-6 border-t border-line pt-6">
+              <ModeSelector
+                mode={mode}
+                onModeChange={changeMode}
+                quality={quality}
+                onQualityChange={setQuality}
+                disabled={busy}
+              />
+            </div>
+
+            {qualityStale && (
+              <Button variant="secondary" className="mt-4 w-full" onClick={() => void run(file, mode, quality)}>
+                <RefreshCw className="size-4" aria-hidden="true" />
+                Re-compress at {Math.round(quality * 100)}%
+              </Button>
             )}
           </div>
         </div>

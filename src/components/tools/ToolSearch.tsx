@@ -124,7 +124,9 @@ export default function ToolSearch({
             '[&::-webkit-search-cancel-button]:appearance-none',
             // Right padding clears the clear-button's hit area, not just its
             // glyph, so a long query cannot run underneath it.
-            isHero ? 'h-14 pl-12 pr-14 text-base' : 'h-10 pl-10 pr-11 text-sm',
+            isHero
+              ? 'h-14 pl-12 pr-14 text-base'
+              : 'h-10 pl-10 pr-11 text-sm [@media(pointer:coarse)]:pr-14',
           )}
         />
         {query && (
@@ -140,7 +142,7 @@ export default function ToolSearch({
               // a phone is a miss waiting to happen. The input's right padding
               // above reserves room for exactly this.
               'absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-md text-faint hover:text-ink',
-              isHero ? 'size-11' : 'size-9',
+              isHero ? 'size-11' : 'size-9 [@media(pointer:coarse)]:size-11',
             )}
           >
             <X className={isHero ? 'size-5' : 'size-4'} strokeWidth={2} />

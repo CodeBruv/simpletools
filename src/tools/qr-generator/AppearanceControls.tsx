@@ -170,7 +170,23 @@ export default function AppearanceControls({
           step={1}
           value={appearance.margin}
           onChange={(event) => onChange('margin', Number(event.target.value))}
-          className="mt-2 w-full accent-accent"
+          className={cn(
+            // Keep the track compact while giving the native range input a
+            // comfortable 44px interaction box on every pointer type.
+            'mt-1 block h-11 w-full appearance-none bg-transparent',
+            '[&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full',
+            '[&::-webkit-slider-runnable-track]:bg-line-strong',
+            '[&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-5',
+            '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full',
+            '[&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:transition-transform',
+            '[&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-100',
+            '[&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full',
+            '[&::-moz-range-track]:bg-line-strong',
+            '[&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:appearance-none',
+            '[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0',
+            '[&::-moz-range-thumb]:bg-accent [&::-moz-range-thumb]:transition-transform',
+            '[&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:active:scale-100',
+          )}
         />
         <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
           Scanners need clear space around the code. Four is the usual amount.

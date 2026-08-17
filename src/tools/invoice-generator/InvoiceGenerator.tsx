@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Printer } from 'lucide-react'
 
 import { Button } from '@/components/ui/Button'
@@ -80,6 +80,18 @@ const FAQ: readonly FaqItem[] = [
 
 export default function InvoiceGenerator({ tool }: ToolComponentProps) {
   const [invoice, setInvoice] = useState<InvoiceData>(() => createInvoice())
+  const [mobileView, setMobileView] = useState<'edit' | 'preview'>('edit')
+  const previewHeadingRef = useRef<HTMLHeadingElement>(null)
+
+  const showPreview = () => {
+    setMobileView('preview')
+    requestAnimationFrame(() => previewHeadingRef.current?.focus())
+  }
+
+  const showEditor = () => {
+    setMobileView('edit')
+    requestAnimationFrame(() => document.getElementById('invoice-edit-view')?.focus())
+  }
 
   const patch = (changes: Partial<InvoiceData>) =>
     setInvoice((current) => ({ ...current, ...changes }))
@@ -110,9 +122,38 @@ export default function InvoiceGenerator({ tool }: ToolComponentProps) {
 
   return (
     <ToolShell tool={tool} help={HELP} faq={FAQ}>
-      <div className="grid gap-8 lg:grid-cols-2 lg:items-start print:block">
+      <div
+        className="grid grid-cols-2 gap-2 lg:hidden print:hidden"
+        role="group"
+        aria-label="Invoice view"
+        data-print="hide"
+      >
+        <Button
+          id="invoice-edit-view"
+          variant={mobileView === 'edit' ? 'primary' : 'secondary'}
+          aria-pressed={mobileView === 'edit'}
+          aria-controls="invoice-editor"
+          onClick={showEditor}
+        >
+          Edit
+        </Button>
+        <Button
+          variant={mobileView === 'preview' ? 'primary' : 'secondary'}
+          aria-pressed={mobileView === 'preview'}
+          aria-controls="invoice-preview"
+          onClick={showPreview}
+        >
+          Preview
+        </Button>
+      </div>
+
+      <div className="mt-6 grid gap-8 lg:mt-0 lg:grid-cols-2 lg:items-start print:mt-0 print:block">
         {/* The editor is application, not document, so it prints nothing. */}
-        <div className="min-w-0 space-y-6" data-print="hide">
+        <div
+          id="invoice-editor"
+          className={cn('min-w-0 space-y-6', mobileView !== 'edit' && 'hidden lg:block print:block')}
+          data-print="hide"
+        >
           <StepSection step={1} title="Your details" hint="Who the invoice is from.">
             <PartyFields
               idPrefix="seller"
@@ -258,9 +299,17 @@ export default function InvoiceGenerator({ tool }: ToolComponentProps) {
           phone, which keeps the reading order the same as the task order. In
           print it stops being sticky and becomes the page.
         */}
-        <aside className="min-w-0 lg:sticky lg:top-24 print:static">
+        <aside
+          id="invoice-preview"
+          className={cn(
+            'min-w-0 lg:sticky lg:top-24 print:static',
+            mobileView !== 'preview' && 'hidden lg:block print:block',
+          )}
+        >
           <div className="flex flex-wrap items-center justify-between gap-3" data-print="hide">
-            <h2 className="eyebrow">Preview</h2>
+            <h2 ref={previewHeadingRef} tabIndex={-1} className="eyebrow">
+              Preview
+            </h2>
             <Button type="button" size="lg" onClick={() => window.print()}>
               <Printer className="size-4" strokeWidth={2} aria-hidden="true" />
               Print / Save as PDF

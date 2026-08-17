@@ -37,10 +37,15 @@ function uiFiles(): Array<{ path: string; source: string }> {
 }
 
 const HEADER = read('src/components/layout/Header.tsx')
+const BUTTON = read('src/components/ui/Button.tsx')
 const DESKTOP_NAV = read('src/components/layout/DesktopNav.tsx')
 const MOBILE_NAV = read('src/components/layout/MobileNav.tsx')
+const TOOL_SEARCH = read('src/components/tools/ToolSearch.tsx')
 const THEME_TOGGLE = read('src/components/layout/ThemeToggle.tsx')
 const BREADCRUMB = read('src/components/ui/Breadcrumb.tsx')
+const IMAGE_QUALITY_SLIDER = read('src/tools/image-compressor/QualitySlider.tsx')
+const PDF_MODE_SELECTOR = read('src/tools/pdf-compressor/ModeSelector.tsx')
+const QR_APPEARANCE = read('src/tools/qr-generator/AppearanceControls.tsx')
 const GLOBALS_CSS = read('src/styles/globals.css')
 
 describe('menus are dismissable and announce themselves', () => {
@@ -78,6 +83,17 @@ describe('menus are dismissable and announce themselves', () => {
 
   test('the mobile sheet button says which action it performs', () => {
     assert.match(HEADER, /aria-label=\{menuOpen \? 'Close menu' : 'Open menu'\}/)
+  })
+
+  test('the mobile sheet owns focus from its trigger through every close path', () => {
+    assert.match(HEADER, /ref=\{menuTriggerRef\}/)
+    assert.match(HEADER, /triggerRef=\{menuTriggerRef\}/)
+    assert.match(MOBILE_NAV, /ref=\{panelRef\}/)
+    assert.match(MOBILE_NAV, /querySelector<HTMLInputElement>\('input:not\(\[disabled\]\)'\)/)
+    assert.match(MOBILE_NAV, /event\.key !== 'Tab'/)
+    assert.match(MOBILE_NAV, /event\.shiftKey && current === first/)
+    assert.match(MOBILE_NAV, /!event\.shiftKey && current === last/)
+    assert.match(MOBILE_NAV, /triggerRef\.current\?\.focus\(\)/)
   })
 
   test('the appearance menu is a radio group labelled with the current choice', () => {
@@ -127,6 +143,32 @@ describe('touch targets on the controls a thumb aims at', () => {
 
   test('the mobile back-to-categories control is a 44px target', () => {
     assert.match(MOBILE_NAV, /min-h-11 items-center gap-2[^"]*text-accent/)
+  })
+
+  test('shared medium buttons preserve 40px fine-pointer density and grow for coarse pointers', () => {
+    assert.match(BUTTON, /md: 'h-10 px-4 text-sm \[@media\(pointer:coarse\)\]:min-h-11'/)
+    assert.match(BUTTON, /lg: 'h-12 px-6 text-\[15px\]'/)
+  })
+
+  test('the compact search clear control grows with enough coarse-pointer input padding', () => {
+    assert.match(
+      TOOL_SEARCH,
+      /isHero\s+\? 'h-14 pl-12 pr-14 text-base'\s+: 'h-10 pl-10 pr-11 text-sm \[@media\(pointer:coarse\)\]:pr-14'/,
+    )
+    assert.match(TOOL_SEARCH, /isHero \? 'size-11' : 'size-9 \[@media\(pointer:coarse\)\]:size-11'/)
+  })
+
+  test('PDF and QR range controls use the explicit 44px slider treatment', () => {
+    for (const [name, source] of [
+      ['image quality', IMAGE_QUALITY_SLIDER],
+      ['PDF quality', PDF_MODE_SELECTOR],
+      ['QR border', QR_APPEARANCE],
+    ] as const) {
+      assert.match(source, /type="range"/, `${name} is not a range control`)
+      assert.match(source, /h-11 w-full appearance-none/, `${name} lacks a 44px interaction box`)
+      assert.match(source, /slider-runnable-track\]:h-2/, `${name} lacks the compact visible track`)
+      assert.match(source, /slider-thumb\]:size-5/, `${name} lacks the touch-friendly thumb`)
+    }
   })
 })
 

@@ -199,6 +199,35 @@ describe('there is exactly one printable document', () => {
   })
 })
 
+describe('the mobile editor and preview share one responsive document', () => {
+  test('the local switch exposes pressed controls for both mounted surfaces', () => {
+    assert.match(EDITOR, /useState<'edit' \| 'preview'>\('edit'\)/)
+    assert.match(EDITOR, /role="group"[\s\S]*aria-label="Invoice view"/)
+    assert.match(EDITOR, /aria-pressed=\{mobileView === 'edit'\}[\s\S]*aria-controls="invoice-editor"/)
+    assert.match(EDITOR, /aria-pressed=\{mobileView === 'preview'\}[\s\S]*aria-controls="invoice-preview"/)
+    assert.match(EDITOR, /className="grid grid-cols-2 gap-2 lg:hidden print:hidden"/)
+  })
+
+  test('desktop and print restore whichever mobile surface is inactive', () => {
+    assert.match(EDITOR, /id="invoice-editor"[\s\S]*mobileView !== 'edit' && 'hidden lg:block print:block'/)
+    assert.match(EDITOR, /id="invoice-preview"[\s\S]*mobileView !== 'preview' && 'hidden lg:block print:block'/)
+    assert.match(EDITOR, /lg:grid-cols-2 lg:items-start[\s\S]*lg:sticky lg:top-24 print:static/)
+  })
+
+  test('switching views moves focus without adding a tab stop', () => {
+    assert.match(EDITOR, /setMobileView\('preview'\)[\s\S]*previewHeadingRef\.current\?\.focus\(\)/)
+    assert.match(EDITOR, /setMobileView\('edit'\)[\s\S]*getElementById\('invoice-edit-view'\)\?\.focus\(\)/)
+    assert.match(EDITOR, /<h2 ref=\{previewHeadingRef\} tabIndex=\{-1\}/)
+  })
+
+  test('the switch preserves one preview and the native print action', () => {
+    assert.equal(EDITOR.match(/<InvoicePreview\b/g)?.length, 1)
+    assert.equal(EDITOR.match(/window\.print\(\)/g)?.length, 1)
+    assert.match(EDITOR, /id="invoice-editor"[\s\S]*data-print="hide"/)
+    assert.match(EDITOR, /aria-label="Invoice view"[\s\S]*data-print="hide"/)
+  })
+})
+
 describe('no print rule can reach inside the document', () => {
   /*
     This is the defect that shipped, and the reason this file is written the way

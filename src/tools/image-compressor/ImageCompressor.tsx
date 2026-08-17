@@ -123,14 +123,14 @@ export default function ImageCompressor({ tool }: ToolComponentProps) {
         <Dropzone onFile={handleFile} error={inputError} />
       ) : (
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
-          <ComparePreview file={file} result={result} failed={Boolean(processError)} />
-
-          {/* min-w-0 stops a long filename, which is set to not wrap, from
-              widening the grid track and forcing the page to scroll sideways. */}
-          <div className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6">
+          {/* Keep the actionable result workflow first in DOM order on phones. */}
+          <div className="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-6 lg:col-start-2">
             {processError ? (
               <div>
-                <h2 className="text-base font-semibold text-ink">That didn't work</h2>
+                <p className="truncate font-mono text-[13px] text-muted" title={file.name}>
+                  {file.name}
+                </p>
+                <h2 className="mt-4 text-base font-semibold text-ink">That didn't work</h2>
                 <p className="mt-2 text-sm leading-relaxed text-danger">{processError}</p>
                 <Button variant="secondary" className="mt-5 w-full" onClick={reset}>
                   Choose another image
@@ -141,9 +141,14 @@ export default function ImageCompressor({ tool }: ToolComponentProps) {
                 {result ? (
                   <ResultLedger result={result} filename={file.name} busy={busy} />
                 ) : (
-                  <div className="flex items-center gap-3 py-6 text-sm text-muted">
-                    <Loader2 className="size-4 animate-spin text-accent" aria-hidden="true" />
-                    Compressing…
+                  <div>
+                    <p className="truncate font-mono text-[13px] text-muted" title={file.name}>
+                      {file.name}
+                    </p>
+                    <div className="mt-4 flex items-center gap-3 py-6 text-sm text-muted">
+                      <Loader2 className="size-4 animate-spin text-accent" aria-hidden="true" />
+                      Compressing…
+                    </div>
                   </div>
                 )}
 
@@ -175,6 +180,12 @@ export default function ImageCompressor({ tool }: ToolComponentProps) {
                 </div>
               </>
             )}
+          </div>
+
+          {/* min-w-0 stops a long filename, which is set to not wrap, from
+              widening the grid track and forcing the page to scroll sideways. */}
+          <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+            <ComparePreview file={file} result={result} failed={Boolean(processError)} />
           </div>
         </div>
       )}

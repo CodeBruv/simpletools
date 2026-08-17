@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
@@ -23,6 +23,7 @@ const MOBILE_NAV_ID = 'mobile-nav'
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const { pathname } = useLocation()
 
   // Close the mobile sheet on navigation.
@@ -94,6 +95,7 @@ export default function Header() {
           <ThemeToggle className="ml-auto lg:ml-1" />
 
           <button
+            ref={menuTriggerRef}
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
@@ -106,7 +108,12 @@ export default function Header() {
         </div>
       </PageContainer>
 
-      <MobileNav id={MOBILE_NAV_ID} open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileNav
+        id={MOBILE_NAV_ID}
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        triggerRef={menuTriggerRef}
+      />
     </header>
   )
 }

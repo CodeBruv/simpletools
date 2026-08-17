@@ -107,7 +107,23 @@ export default function ModeSelector({
               step={5}
               value={Math.round(quality * 100)}
               onChange={(event) => onQualityChange(Number(event.target.value) / 100)}
-              className="mt-2 w-full accent-accent"
+              className={cn(
+                // The input owns a 44px interaction box while the visible track
+                // remains compact, matching the image quality control.
+                'mt-1 block h-11 w-full appearance-none bg-transparent',
+                '[&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full',
+                '[&::-webkit-slider-runnable-track]:bg-line-strong',
+                '[&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-5',
+                '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full',
+                '[&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:transition-transform',
+                '[&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-100',
+                '[&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full',
+                '[&::-moz-range-track]:bg-line-strong',
+                '[&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:appearance-none',
+                '[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0',
+                '[&::-moz-range-thumb]:bg-accent [&::-moz-range-thumb]:transition-transform',
+                '[&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:active:scale-100',
+              )}
             />
           </div>
         </div>

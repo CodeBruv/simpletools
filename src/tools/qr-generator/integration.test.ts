@@ -179,6 +179,35 @@ describe('privacy', () => {
 })
 
 /* ------------------------------------------------------------------ *
+ * Responsive completion flow
+ * ------------------------------------------------------------------ */
+
+describe('responsive completion flow', () => {
+  const source = readFileSync(join(TOOL_DIR, 'QrGenerator.tsx'), 'utf8')
+
+  test('the single DOM order is payload, preview, then appearance', () => {
+    const payload = source.indexOf('<legend className="eyebrow">What should it do?</legend>')
+    const preview = source.indexOf('<h2 className="eyebrow">Your code</h2>')
+    const appearance = source.indexOf('<h2 className="eyebrow">Appearance</h2>')
+
+    assert.ok(payload >= 0 && payload < preview, 'the preview must follow the payload fields')
+    assert.ok(preview < appearance, 'appearance controls must follow the preview in the DOM')
+  })
+
+  test('there is one accessible QR output and one live status region', () => {
+    assert.equal(source.match(/<svg\b/g)?.length, 1)
+    assert.equal(source.match(/role="img"/g)?.length, 1)
+    assert.equal(source.match(/aria-live="polite"/g)?.length, 1)
+  })
+
+  test('large screens restore the left form and sticky right preview', () => {
+    assert.match(source, /lg:col-start-1 lg:row-start-1/)
+    assert.match(source, /lg:sticky lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:top-24 lg:self-start/)
+    assert.match(source, /lg:col-start-1 lg:row-start-2/)
+  })
+})
+
+/* ------------------------------------------------------------------ *
  * End to end
  * ------------------------------------------------------------------ */
 

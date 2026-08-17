@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { KeyboardEvent, RefObject } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, ChevronRight } from 'lucide-react'
 
@@ -11,7 +12,11 @@ interface MobileNavProps {
   id: string
   open: boolean
   onClose: () => void
+  triggerRef: RefObject<HTMLButtonElement | null>
 }
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 /**
  * Mobile navigation: a two-pane drill-down, not a shrunken desktop menu.
@@ -20,9 +25,11 @@ interface MobileNavProps {
  * category's tools, so only one list is ever on screen no matter how large the
  * registry grows. Rows are sized for thumbs rather than cursors.
  */
-export default function MobileNav({ id, open, onClose }: MobileNavProps) {
+export default function MobileNav({ id, open, onClose, triggerRef }: MobileNavProps) {
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
   const backRef = useRef<HTMLButtonElement>(null)
+  const wasOpenRef = useRef(false)
 
   const tree = getNavigationTree()
   const active = tree.find((entry) => entry.category.slug === activeSlug)
@@ -33,6 +40,54 @@ export default function MobileNav({ id, open, onClose }: MobileNavProps) {
     if (!open) setActiveSlug(null)
   }, [open])
 
+  // Opening starts at the existing search control; closing returns focus to the
+  // trigger, including closes initiated by links, routing, Escape, or resize.
+  useEffect(() => {
+    if (open) {
+      wasOpenRef.current = true
+      const panel = panelRef.current
+      const search = panel?.querySelector<HTMLInputElement>('input:not([disabled])')
+      const first = search ?? panel?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+      first?.focus()
+      return
+    }
+
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false
+      triggerRef.current?.focus()
+    }
+  }, [open, triggerRef])
+
+  // Keep keyboard focus within the visible mobile sheet.
+  function onPanelKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== 'Tab') return
+
+    const panel = panelRef.current
+    if (!panel) return
+
+    const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+      (element) => !element.hasAttribute('aria-hidden'),
+    )
+    if (focusable.length === 0) {
+      event.preventDefault()
+      return
+    }
+
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (!first || !last) return
+
+    const current = document.activeElement
+
+    if (event.shiftKey && current === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && current === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+
   // Drilling in replaces the visible content, so focus has to follow or a
   // screen-reader user is left reading a pane that no longer exists.
   useEffect(() => {
@@ -42,7 +97,12 @@ export default function MobileNav({ id, open, onClose }: MobileNavProps) {
   if (!open) return null
 
   return (
-    <div id={id} className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-paper lg:hidden">
+    <div
+      ref={panelRef}
+      id={id}
+      onKeyDown={onPanelKeyDown}
+      className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-paper lg:hidden"
+    >
       <PageContainer className="pb-6 pt-4">
         {active ? (
           <>
