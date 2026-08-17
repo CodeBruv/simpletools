@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url'
 
 import {
   AD_PLACEMENTS,
-  AD_PROVIDER_CONFIGURED,
   AD_SIZES,
   PLACEMENTS_FORBIDDEN_INSIDE_TOOL_UI,
   isAdPlacement,
@@ -47,6 +46,10 @@ function sourceFiles(dir = join(PROJECT_ROOT, 'src')): string[] {
 }
 
 const AD_SLOT_SOURCE = readProjectFile('src/components/monetization/AdSlot.tsx')
+const AD_RESOLVER_SOURCE = readProjectFile('src/components/monetization/adResolver.ts')
+const ADSENSE_ADAPTER_SOURCE = readProjectFile(
+  'src/components/monetization/providers/AdSenseAdapter.tsx',
+)
 const TOOL_SHELL_SOURCE = readProjectFile('src/components/tools/ToolShell.tsx')
 
 describe('ad placement vocabulary', () => {
@@ -96,21 +99,25 @@ describe('ad placement vocabulary', () => {
   })
 })
 
-describe('no advertising provider ships in this build', () => {
-  test('the master switch is off', () => {
-    assert.equal(AD_PROVIDER_CONFIGURED, true)
+describe('provider-neutral slot boundary', () => {
+  test('the generic slot resolves a provider by placement', () => {
+    assert.match(AD_SLOT_SOURCE, /resolveAdProvider\(placement\)/)
+    assert.match(AD_RESOLVER_SOURCE, /supportsPlacement\(placement\)/)
   })
 
-  test('the slot renders nothing while the switch is off', () => {
-    // The early return is the whole reason an unused slot leaves no gap.
-    assert.match(AD_SLOT_SOURCE, /if\s*\(!AD_PROVIDER_CONFIGURED\)\s*return null/)
+  test('an unresolved or unavailable placement renders no wrapper or spacing', () => {
+    assert.match(AD_SLOT_SOURCE, /if\s*\(!provider\s*\|\|\s*available === false\)\s*return null/)
+    assert.match(AD_SLOT_SOURCE, /onAvailabilityChange=\{handleAvailabilityChange\}/)
+    assert.match(AD_SLOT_SOURCE, /height: 0/)
+    assert.match(AD_SLOT_SOURCE, /margin: 0/)
   })
 
-  test('the component names no ad network', () => {
+  test('the generic component names no ad network', () => {
     for (const provider of [
       'adsbygoogle',
       'googlesyndication',
       'adsense',
+      'adcash',
       'doubleclick',
       'taboola',
       'outbrain',
@@ -125,7 +132,13 @@ describe('no advertising provider ships in this build', () => {
     }
   })
 
-  test('the component opens no network connection and injects no script', () => {
+  test('provider markup and globals live in the provider adapter', () => {
+    assert.match(ADSENSE_ADAPTER_SOURCE, /className="adsbygoogle ad-provider-content"/)
+    assert.match(ADSENSE_ADAPTER_SOURCE, /window\.adsbygoogle/)
+    assert.doesNotMatch(AD_SLOT_SOURCE, /data-ad-client|data-ad-slot|window\./)
+  })
+
+  test('the generic component opens no connection and injects no script', () => {
     for (const pattern of [
       /\bfetch\s*\(/,
       /XMLHttpRequest/,
@@ -142,12 +155,11 @@ describe('no advertising provider ships in this build', () => {
     }
   })
 
-  test('the slot imports nothing beyond its own placement table and utils', () => {
-    // Deduplicated: the placement module is imported twice, once for its type
-    // and once for its values. What matters is the set of modules reached.
+  test('the slot imports only neutral monetization modules and utils', () => {
     const imports = [...AD_SLOT_SOURCE.matchAll(/from\s+'([^']+)'/g)].map((match) => match[1])
     assert.deepEqual([...new Set(imports)].sort(), [
       '@/components/monetization/adPlacements',
+      '@/components/monetization/adResolver',
       '@/lib/utils',
       'react',
     ])
