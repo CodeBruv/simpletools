@@ -178,23 +178,33 @@
     background-size: 16px 16px;
   }
 
-  /*
-    Reserved space for a future advertisement.
-
-    No advertising provider is configured, so AdSlot renders nothing at all and
-    this rule never applies in the current build. It exists so that switching
-    advertising on is a flag change rather than a layout project: the height is
-    reserved from the placement table *before* a unit loads, which is what stops
-    a late-arriving ad from shoving a download button out from under a thumb.
-  */
+  /* Keep provider-injected geometry inside the reviewed placement boundary. */
   .ad-slot {
+    --ad-height-current: var(--ad-height-narrow);
+
     display: block;
-    min-height: var(--ad-height-narrow);
+    min-height: var(--ad-height-current) !important;
+    max-height: var(--ad-height-current) !important;
+    overflow: hidden;
+  }
+
+  .ad-slot > .adsbygoogle {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: var(--ad-height-current) !important;
+    overflow: hidden !important;
+  }
+
+  .ad-slot > .adsbygoogle > div {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
   }
 
   @media (min-width: 48rem) {
     .ad-slot {
-      min-height: var(--ad-height-wide);
+      --ad-height-current: var(--ad-height-wide);
     }
   }
 }
