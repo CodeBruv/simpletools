@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import AdCashAutotagExperience from '@/components/monetization/AdCashAutotagExperience'
 import AppRoutes from '@/app/routes'
 
 /** Client-side navigation should behave like a page load: start at the top. */
@@ -36,6 +37,7 @@ export default function App() {
 
       <Footer />
 
+      <AdCashAutotagExperience />
       <Analytics />
       <SpeedInsights />
     </div>
