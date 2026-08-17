@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
+
 import {
   AD_SIZES,
   type AdPlacement,
 } from '@/components/monetization/adPlacements'
-import { AD_SLOTS, ADSENSE_CLIENT } from '@/components/monetization/adConfig'
+import { resolveAdProvider } from '@/components/monetization/adResolver'
 import { cn } from '@/lib/utils'
 
 interface AdSlotProps {
@@ -13,12 +14,16 @@ interface AdSlotProps {
 }
 
 export default function AdSlot({ placement, className }: AdSlotProps) {
+  const provider = resolveAdProvider(placement)
+  const [available, setAvailable] = useState<boolean | null>(null)
   const slotRef = useRef<HTMLElement>(null)
-  const adRef = useRef<HTMLModElement>(null)
+  const handleAvailabilityChange = useCallback((nextAvailable: boolean) => {
+    setAvailable(nextAvailable)
+  }, [])
 
   useEffect(() => {
     const slot = slotRef.current
-    if (!slot) return
+    if (!slot || !provider || available !== true) return
 
     const preserveBoundary = () => {
       for (const property of ['min-height', 'max-height']) {
@@ -35,41 +40,41 @@ export default function AdSlot({ placement, className }: AdSlotProps) {
 
     preserveBoundary()
 
-    try {
-      if (
-        adRef.current &&
-        adRef.current.getAttribute('data-adsbygoogle-status') !== 'done'
-      ) {
-        ;(window.adsbygoogle = window.adsbygoogle || []).push({})
-      }
-    } catch (error) {
-      console.error('AdSense error:', error)
-    }
-
     return () => observer.disconnect()
-  }, [])
+  }, [available, provider])
+
+  if (!provider || available === false) return null
+
+  const ProviderComponent = provider.Component
+  const slotIsActive = available === true
 
   return (
     <aside
       ref={slotRef}
-      aria-label="Advertisement"
+      aria-label={slotIsActive ? 'Advertisement' : undefined}
+      aria-hidden={!slotIsActive}
       data-ad-placement={placement}
-      className={cn('ad-slot', className)}
+      data-ad-provider={provider.id}
+      className={slotIsActive ? cn('ad-slot', className) : undefined}
       style={
-        {
-          '--ad-height-narrow': `${AD_SIZES[placement].narrow}px`,
-          '--ad-height-wide': `${AD_SIZES[placement].wide}px`,
-        } as CSSProperties
+        slotIsActive
+          ? ({
+              '--ad-height-narrow': `${AD_SIZES[placement].narrow}px`,
+              '--ad-height-wide': `${AD_SIZES[placement].wide}px`,
+            } as CSSProperties)
+          : {
+              height: 0,
+              minHeight: 0,
+              maxHeight: 0,
+              margin: 0,
+              padding: 0,
+              overflow: 'hidden',
+            }
       }
     >
-      <ins
-        ref={adRef}
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client={ADSENSE_CLIENT}
-        data-ad-slot={AD_SLOTS[placement]}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
+      <ProviderComponent
+        placement={placement}
+        onAvailabilityChange={handleAvailabilityChange}
       />
     </aside>
   )
