@@ -237,9 +237,9 @@ describe('answers', () => {
 })
 
 describe('defaults', () => {
-  test('the naira leads, and every field starts empty', () => {
-    assert.equal(DEFAULT_MARGIN_CURRENCY, 'NGN')
-    assert.equal(EMPTY_MARGIN_INPUTS.currencyCode, 'NGN')
+  test('US dollars lead, and every field starts empty', () => {
+    assert.equal(DEFAULT_MARGIN_CURRENCY, 'USD')
+    assert.equal(EMPTY_MARGIN_INPUTS.currencyCode, 'USD')
     assert.equal(EMPTY_MARGIN_INPUTS.cost, '')
     assert.equal(EMPTY_MARGIN_INPUTS.price, '')
     assert.equal(EMPTY_MARGIN_INPUTS.targetMargin, '')
