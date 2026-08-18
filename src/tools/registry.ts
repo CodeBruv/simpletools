@@ -1,6 +1,17 @@
 import { lazy } from 'react'
 import type { ComponentType, LazyExoticComponent } from 'react'
-import { FileArchive, ImageDown, QrCode, Percent, ReceiptText } from 'lucide-react'
+import {
+  Braces,
+  FileArchive,
+  ImageDown,
+  Images,
+  KeyRound,
+  Merge,
+  Percent,
+  QrCode,
+  ReceiptText,
+  Scaling,
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import type { Category, CategoryId } from '@/data/categories'
@@ -144,6 +155,91 @@ export const TOOLS: readonly Tool[] = [
         'Create a professional invoice in your browser: line items, discount, tax and totals in 17 currencies. Print it or save it as a PDF. No signup, nothing uploaded.',
     },
     component: lazy(() => import('@/tools/invoice-generator/InvoiceGenerator')),
+  },
+  {
+    slug: 'image-converter',
+    name: 'Image Converter',
+    description: 'Convert JPG, PNG and WebP images locally in your browser.',
+    category: 'images',
+    icon: Images,
+    status: 'available',
+    featured: false,
+    clientOnly: true,
+    keywords: ['image', 'convert', 'format', 'jpg', 'jpeg', 'png', 'webp', 'photo'],
+    seo: {
+      title: 'Image Converter — Convert JPG, PNG & WebP | SimpleTools',
+      description:
+        'Convert JPG, PNG and WebP images locally in your browser while preserving dimensions. Download the new format without uploading your image.',
+    },
+    component: lazy(() => import('@/tools/image-converter/ImageConverter')),
+  },
+  {
+    slug: 'pdf-merger',
+    name: 'PDF Merger',
+    description: 'Combine multiple PDF files into one document in your browser.',
+    category: 'pdfs',
+    icon: Merge,
+    status: 'available',
+    featured: false,
+    clientOnly: true,
+    keywords: ['pdf', 'merge', 'combine', 'join', 'document', 'pages', 'files'],
+    seo: {
+      title: 'PDF Merger — Combine PDF Files Online | SimpleTools',
+      description:
+        'Merge multiple PDF files into one document in your browser. Arrange files in the order you need and combine them without uploading private documents.',
+    },
+    component: lazy(() => import('@/tools/pdf-merger/PdfMerger')),
+  },
+  {
+    slug: 'image-resizer',
+    name: 'Image Resizer',
+    description: 'Resize image dimensions for websites, profiles and documents.',
+    category: 'images',
+    icon: Scaling,
+    status: 'available',
+    featured: false,
+    clientOnly: true,
+    keywords: ['image', 'resize', 'dimensions', 'width', 'height', 'pixels', 'photo', 'scale'],
+    seo: {
+      title: 'Image Resizer — Resize Images Online | SimpleTools',
+      description:
+        'Resize JPG, PNG and WebP images in your browser with exact dimensions, percentage scaling or fit-within limits. Your image never leaves your device.',
+    },
+    component: lazy(() => import('@/tools/image-resizer/ImageResizer')),
+  },
+  {
+    slug: 'json-formatter',
+    name: 'JSON Formatter',
+    description: 'Format and validate JSON so structured data is easier to read.',
+    category: 'generators',
+    icon: Braces,
+    status: 'available',
+    featured: false,
+    clientOnly: true,
+    keywords: ['json', 'format', 'validate', 'beautify', 'pretty print', 'minify', 'developer'],
+    seo: {
+      title: 'JSON Formatter — Format, Validate & Minify | SimpleTools',
+      description:
+        'Format, validate and minify JSON in your browser with readable indentation and useful syntax error locations. Your JSON stays on your device.',
+    },
+    component: lazy(() => import('@/tools/json-formatter/JsonFormatter')),
+  },
+  {
+    slug: 'password-generator',
+    name: 'Password Generator',
+    description: 'Generate strong random passwords with the options you choose.',
+    category: 'generators',
+    icon: KeyRound,
+    status: 'available',
+    featured: false,
+    clientOnly: true,
+    keywords: ['password', 'generate', 'random', 'secure', 'strong', 'characters', 'security'],
+    seo: {
+      title: 'Password Generator — Create Strong Passwords | SimpleTools',
+      description:
+        'Generate strong random passwords in your browser. Choose the length and character types you need without sending generated passwords to a server.',
+    },
+    component: lazy(() => import('@/tools/password-generator/PasswordGenerator')),
   },
 ] as const
 
