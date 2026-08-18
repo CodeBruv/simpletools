@@ -54,11 +54,11 @@ function discountedTaxedInvoice(): InvoiceData {
 }
 
 describe('acceptance walkthrough — a fresh invoice', () => {
-  test('opens on INV-0001 in naira with one editable row', () => {
+  test('opens on INV-0001 in US dollars with one editable row', () => {
     const fresh = createInvoice(NOW)
 
     assert.equal(fresh.invoiceNumber, 'INV-0001')
-    assert.equal(fresh.currencyCode, 'NGN')
+    assert.equal(fresh.currencyCode, 'USD')
     assert.equal(fresh.items.length, 1)
     assert.equal(fresh.items[0]?.quantity, '1')
   })
