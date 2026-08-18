@@ -1,5 +1,6 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
+import { Braces, Images, KeyRound, Merge, Scaling } from 'lucide-react'
 
 import { CATEGORIES, getCategory } from '@/data/categories'
 import {
@@ -12,14 +13,19 @@ import {
 } from '@/tools/registry'
 
 describe('registry integrity', () => {
-  test('registers the five MVP tools', () => {
-    assert.equal(TOOLS.length, 5)
+  test('registers the five MVP tools and five Phase 2 placeholders', () => {
+    assert.equal(TOOLS.length, 10)
     assert.deepEqual(
       TOOLS.map((tool) => tool.slug).sort(),
       [
         'image-compressor',
+        'image-converter',
+        'image-resizer',
         'invoice-generator',
+        'json-formatter',
+        'password-generator',
         'pdf-compressor',
+        'pdf-merger',
         'profit-margin-calculator',
         'qr-code-generator',
       ],
@@ -56,6 +62,14 @@ describe('registry integrity', () => {
       assert.ok(tool.icon, `${tool.slug} has no icon`)
       assert.ok(tool.keywords.length > 0, `${tool.slug} has no keywords`)
     }
+  })
+
+  test('the Phase 2 tools use semantic icons from the existing icon set', () => {
+    assert.equal(getTool('image-converter')?.icon, Images)
+    assert.equal(getTool('pdf-merger')?.icon, Merge)
+    assert.equal(getTool('image-resizer')?.icon, Scaling)
+    assert.equal(getTool('json-formatter')?.icon, Braces)
+    assert.equal(getTool('password-generator')?.icon, KeyRound)
   })
 })
 
@@ -115,8 +129,79 @@ describe('tool availability', () => {
     const available = TOOLS.filter((tool) => tool.status === 'available')
     assert.deepEqual(
       available.map((tool) => tool.slug),
-      ['image-compressor', 'pdf-compressor', 'qr-code-generator', 'profit-margin-calculator', 'invoice-generator'],
+      [
+        'image-compressor',
+        'pdf-compressor',
+        'qr-code-generator',
+        'profit-margin-calculator',
+        'invoice-generator',
+        'image-converter',
+        'pdf-merger',
+        'image-resizer',
+        'json-formatter',
+        'password-generator',
+      ],
     )
+  })
+
+  test('Image Converter is available with one lazy implementation', () => {
+    const tool = getTool('image-converter')
+
+    assert.ok(tool)
+    assert.equal(tool.slug, 'image-converter')
+    assert.equal(tool.category, 'images')
+    assert.equal(tool.icon, Images)
+    assert.equal(tool.status, 'available')
+    assert.equal(tool.featured, false)
+    assert.equal((tool.component as { $$typeof?: symbol }).$$typeof, Symbol.for('react.lazy'))
+  })
+
+  test('PDF Merger is available with one lazy implementation', () => {
+    const tool = getTool('pdf-merger')
+
+    assert.ok(tool)
+    assert.equal(tool.slug, 'pdf-merger')
+    assert.equal(tool.category, 'pdfs')
+    assert.equal(tool.icon, Merge)
+    assert.equal(tool.status, 'available')
+    assert.equal(tool.featured, false)
+    assert.equal((tool.component as { $$typeof?: symbol }).$$typeof, Symbol.for('react.lazy'))
+  })
+
+  test('JSON Formatter is available with one lazy implementation', () => {
+    const tool = getTool('json-formatter')
+
+    assert.ok(tool)
+    assert.equal(tool.slug, 'json-formatter')
+    assert.equal(tool.category, 'generators')
+    assert.equal(tool.icon, Braces)
+    assert.equal(tool.status, 'available')
+    assert.equal(tool.featured, false)
+    assert.equal((tool.component as { $$typeof?: symbol }).$$typeof, Symbol.for('react.lazy'))
+  })
+
+  test('Password Generator is available with one lazy implementation', () => {
+    const tool = getTool('password-generator')
+
+    assert.ok(tool)
+    assert.equal(tool.slug, 'password-generator')
+    assert.equal(tool.category, 'generators')
+    assert.equal(tool.icon, KeyRound)
+    assert.equal(tool.status, 'available')
+    assert.equal(tool.featured, false)
+    assert.equal((tool.component as { $$typeof?: symbol }).$$typeof, Symbol.for('react.lazy'))
+  })
+
+  test('Image Resizer is available with one lazy implementation', () => {
+    const tool = getTool('image-resizer')
+
+    assert.ok(tool)
+    assert.equal(tool.slug, 'image-resizer')
+    assert.equal(tool.category, 'images')
+    assert.equal(tool.icon, Scaling)
+    assert.equal(tool.status, 'available')
+    assert.equal(tool.featured, false)
+    assert.equal((tool.component as { $$typeof?: symbol }).$$typeof, Symbol.for('react.lazy'))
   })
 
   test('an available tool has an implementation and a planned one does not', () => {
@@ -151,9 +236,12 @@ describe('lookup helpers', () => {
   test('getToolsByCategory filters', () => {
     assert.deepEqual(
       getToolsByCategory('images').map((tool) => tool.slug),
-      ['image-compressor'],
+      ['image-compressor', 'image-converter', 'image-resizer'],
     )
-    assert.equal(getToolsByCategory('generators').length, 1)
+    assert.deepEqual(
+      getToolsByCategory('generators').map((tool) => tool.slug),
+      ['qr-code-generator', 'json-formatter', 'password-generator'],
+    )
   })
 
   test('no category page is empty', () => {
@@ -184,7 +272,7 @@ describe('getRelatedTools', () => {
   })
 
   test('leads with a tool that actually works', () => {
-    assert.equal(getRelatedTools('pdf-compressor')[0]?.slug, 'image-compressor')
+    assert.equal(getRelatedTools('image-resizer')[0]?.slug, 'image-compressor')
   })
 
   test('returns nothing for an unknown slug rather than throwing', () => {
